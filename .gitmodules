@@ -1,0 +1,3 @@
+[submodule "cl4d"]
+	path = cl4d
+	url = git://github.com/Trass3r/cl4d.git
