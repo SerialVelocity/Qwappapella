@@ -3,7 +3,7 @@ CFLAGS=--build-only -version=CL_VERSION_1_1 -L-lOpenCL -Icl4d -d
 RELEASEFLAGS=-release -O -inline
 DEBUGFLAGS=-debug -gc
 
-FILES=main.d CLUtils.d
+FILES=main.d CLUtils.d Euler/*.d
 
 all: qwap
 

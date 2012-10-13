@@ -1,4 +1,4 @@
-Bmodule CLUtils;
+module CLUtils;
 
 import opencl.all;
 import std.stdio : writeln, writefln;
