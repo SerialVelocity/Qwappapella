@@ -1,6 +1,8 @@
 module Euler.Problems;
 
 import std.conv;
+
+public import CLUtils;
 import Euler.Problem1;
 
 Problem[int] problems;
@@ -10,7 +12,7 @@ abstract class Problem {
     problems[i] = this;
   }
 
-  void run();
+  void run(CLInfo info);
 
   @property
   string name();

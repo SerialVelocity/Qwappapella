@@ -4,7 +4,6 @@ import std.conv;
 import std.stdio;
 import std.string;
 
-import CLUtils;
 import Euler.Problems;
 
 void euler(CLInfo info) {
@@ -17,5 +16,5 @@ void euler(CLInfo info) {
     int num = to!int(readln().strip());
 
     if(num in problems)
-      problems[num].run();
+      problems[num].run(info);
 }
