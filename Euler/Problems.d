@@ -2,7 +2,7 @@ module Euler.Problems;
 
 import std.conv;
 
-public import CLUtils;
+public import Utils;
 
 import Euler.Problem1;
 import Euler.Problem89;
@@ -10,7 +10,7 @@ import Euler.Problem89;
 Problem[int] problems;
 
 abstract class Problem {
-  void run(CLInfo info);
+  void run();
 
   @property
   string name();

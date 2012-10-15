@@ -12,7 +12,7 @@ import std.string;
 mixin(AddProblem(89));
 
 class Problem89 : Problem {
-  void run(CLInfo info) {
+  void run() {
     string[] numbers = to!string(read("Euler/roman.txt")).split("\n");
     ulong numLength = reduce!((x, y) => max(x, y))(map!((x) => x.length)(numbers)) + 1;
 
@@ -166,6 +166,6 @@ class Problem89 : Problem {
   }
 
   string name() {
-    return "Add all the natural numbers below one thousand that are multiples of 3 or 5.";
+    return "Find the number of characters saved by writing these Roman numbers in minimal form.";
   }
 }

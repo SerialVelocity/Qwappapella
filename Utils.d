@@ -1,7 +1,12 @@
-module CLUtils;
+module Utils;
 
 import opencl.all;
-import std.stdio : writeln, writefln;
+import std.conv : to;
+import std.stdio : write, writeln, writefln, readln;
+import std.string : strip;
+
+CLInfo info;
+Menu menu;
 
 struct CLInfo {
   CLPlatform platform;
@@ -13,7 +18,6 @@ struct CLInfo {
 }
 
 auto InitCL() {
-  CLInfo info;
   info.platforms = CLHost.getPlatforms();
 
   if (info.platforms.length < 1)
@@ -36,5 +40,45 @@ auto InitCL() {
 
   // Create a command queue and use the first device
   info.queue = CLCommandQueue(info.context, info.device);
-  return info;
+}
+
+class Menu {
+  int[] args;
+  this(string[] args) {
+    if(args == null || args.length <= 1) {
+      this.args.length = 0;
+    } else {
+      this.args.length = args.length - 1;
+      foreach(i, ref arg; args[1..$])
+	this.args[i] = to!int(arg);
+    }
+  }
+
+  void opCall(string[int] options, void delegate()[int] cmds) {
+    assert(options.length == cmds.length);
+
+    if(args.length > 0) {
+      if(args[0] in cmds) {
+	auto arg = args[0];
+	args = args[1..$];
+	cmds[arg]();
+	return;
+      } else {
+	writefln("Unknown option %d, reverting to user input", args[0]);
+	args.length = 0;
+      }
+    }
+
+    writefln("Please select an option:");
+
+    foreach(i, option; options)
+      writefln("%d. %s", i, option);
+
+    write("\n=> ");
+
+    int num = to!int(readln().strip());
+    if(num in cmds) {
+      cmds[num]();
+    }
+  }
 }

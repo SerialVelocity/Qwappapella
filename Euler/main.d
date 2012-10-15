@@ -6,15 +6,14 @@ import std.string;
 
 import Euler.Problems;
 
-void euler(CLInfo info) {
-  writefln("\nPlease select a problem:");
+void euler() {
+  string[int] options;
+  void delegate()[int] cmds;
 
-  foreach(i, problem; problems)
-    writefln("%d. %s", i, problem.name);
+  foreach(i, ref problem; problems) {
+    options[i] = problem.name();
+    cmds[i] = () => problem.run();
+  }
 
-  write("\n=> ");
-  int num = to!int(readln().strip());
-
-  if(num in problems)
-    problems[num].run(info);
+  menu(options, cmds);
 }

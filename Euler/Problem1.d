@@ -11,7 +11,7 @@ mixin(AddProblem(1));
 const enum SUM_SIZE = 1000;
 
 class Problem1 : Problem {
-  void run(CLInfo info) {
+  void run() {
     auto program = info.context.createProgram(mixin(CL_PROGRAM_STRING_DEBUG_INFO) ~ q{
         __kernel void problem(__global int *sum) {
           int tid = get_global_id(0);
