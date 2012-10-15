@@ -3,8 +3,9 @@ module Euler.Problem1;
 import Euler.Problems;
 
 import opencl.all;
-import std.stdio;
-import std.string;
+import std.algorithm : reduce;
+import std.stdio : writefln;
+import std.string : strip;
 
 mixin(AddProblem(1));
 
@@ -22,12 +23,20 @@ class Problem1 : Problem {
 
           barrier(CLK_GLOBAL_MEM_FENCE);
 
+          /*
           for(uint s = 1; s < get_global_size(0); s *= 2) {
-            if(tid % (2 * s) == 0)
+            if(tid % (2 * s) == 0 && tid + s < get_global_size(0))
               sum[tid] += sum[tid + s];
 
             barrier(CLK_GLOBAL_MEM_FENCE);
           }
+          */
+
+          /*
+          if(tid == 0) for(uint s = 1; s < get_global_size(0); ++s) {
+            sum[0] += sum[s];
+          }
+          */
         }
       });
 
@@ -50,7 +59,7 @@ class Problem1 : Problem {
 
     info.queue.enqueueReadBuffer(buff, CL_TRUE, 0, sum.sizeof, sum.ptr);
 
-    writefln("The sum is: %d", sum[0]);
+    writefln("The sum is: %d", reduce!((a, b) => a + b)(sum));
   }
 
   string name() {

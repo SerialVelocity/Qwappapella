@@ -1,6 +1,6 @@
 module Euler.Problems;
 
-import std.conv;
+import std.conv : to;
 
 public import Utils;
 

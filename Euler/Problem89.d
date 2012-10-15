@@ -3,11 +3,11 @@ module Euler.Problem89;
 import Euler.Problems;
 
 import opencl.all;
-import std.algorithm;
-import std.conv;
-import std.file;
-import std.stdio;
-import std.string;
+import std.algorithm : reduce, map, max;
+import std.conv : to;
+import std.file : read;
+import std.stdio : writefln;
+import std.string : strip, split;
 
 mixin(AddProblem(89));
 
@@ -123,12 +123,20 @@ class Problem89 : Problem {
 
           barrier(CLK_GLOBAL_MEM_FENCE);
 
+          /*
           for(uint s = 1; s < get_global_size(0); s *= 2) {
-            if(tid % (2 * s) == 0)
+            if(tid % (2 * s) == 0 && tid + s < get_global_size(0))
               sum[tid] += sum[tid + s];
 
             barrier(CLK_GLOBAL_MEM_FENCE);
           }
+          */
+
+          /*
+          if(tid == 0) for(uint s = 1; s < get_global_size(0); ++s) {
+            sum[0] += sum[s];
+          }
+          */
         }
       });
 
@@ -162,7 +170,7 @@ class Problem89 : Problem {
 
     info.queue.enqueueReadBuffer(buff, CL_TRUE, 0, sum.length * sum[0].sizeof, sum.ptr);
 
-    writefln("The sum is: %d", sum[0]);
+    writefln("The sum is: %d", reduce!((a, b) => a + b)(sum));
   }
 
   string name() {
