@@ -11,28 +11,24 @@ mixin(AddProblem(1));
 const enum SUM_SIZE = 1000;
 
 class Problem1 : Problem {
-  this() {
-    super(1);
-  }
-
   void run(CLInfo info) {
     auto program = info.context.createProgram(mixin(CL_PROGRAM_STRING_DEBUG_INFO) ~ q{
-	__kernel void problem(__global int *sum) {
-	  int tid = get_global_id(0);
-	  if(tid % 3 == 0 || tid % 5 == 0)
-	    sum[tid] = tid;
-	  else
-	    sum[tid] = 0;
+        __kernel void problem(__global int *sum) {
+          int tid = get_global_id(0);
+          if(tid % 3 == 0 || tid % 5 == 0)
+            sum[tid] = tid;
+          else
+            sum[tid] = 0;
 
-	  barrier(CLK_GLOBAL_MEM_FENCE);
+          barrier(CLK_GLOBAL_MEM_FENCE);
 
-	  for(uint s = 1; s < get_global_size(0); s *= 2) {
-	    if(tid % (2 * s) == 0)
-	      sum[tid] += sum[tid + s];
+          for(uint s = 1; s < get_global_size(0); s *= 2) {
+            if(tid % (2 * s) == 0)
+              sum[tid] += sum[tid + s];
 
-	    barrier(CLK_GLOBAL_MEM_FENCE);
-	  }
-	}
+            barrier(CLK_GLOBAL_MEM_FENCE);
+          }
+        }
       });
 
     program.build("-w -Werror");
