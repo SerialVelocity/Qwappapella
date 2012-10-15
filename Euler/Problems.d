@@ -3,15 +3,13 @@ module Euler.Problems;
 import std.conv;
 
 public import CLUtils;
+
 import Euler.Problem1;
+import Euler.Problem89;
 
 Problem[int] problems;
 
 abstract class Problem {
-  this(int i) {
-    problems[i] = this;
-  }
-
   void run(CLInfo info);
 
   @property
