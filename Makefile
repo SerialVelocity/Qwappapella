@@ -1,5 +1,13 @@
+UNAME = $(shell uname)
+ifeq (${UNAME}, Darwin)
+LIBRARIES = -L-framework -LOpenCL
+endif
+ifeq (${UNAME}, Linux)
+LIBRARIES = -L-lOpenCL
+endif
+
 CC=rdmd
-CFLAGS=--build-only -version=CL_VERSION_1_1 -L-lOpenCL -Icl4d -d
+CFLAGS=--build-only -version=CL_VERSION_1_1 ${LIBRARIES} -Icl4d -d
 RELEASEFLAGS=-release -O -inline
 DEBUGFLAGS=-debug -gc
 
