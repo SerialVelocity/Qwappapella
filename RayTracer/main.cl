@@ -58,7 +58,7 @@ float3 object_normal(__global RayObject *object, float3 hit) {
   return (float3)(0.0, 0.0, 0.0);
 }
 
-__kernel void main(__global Colour *pixels, __global RayObject *objects, __global TracerInfo *info) {
+__kernel void traceRays(__global Colour *pixels, __global RayObject *objects, __global TracerInfo *info) {
   float3 colour = (float3)(0.0, 0.0, 0.0);
 
   //pixels[0].r = sizeof(RayObject);
@@ -116,7 +116,7 @@ __kernel void main(__global Colour *pixels, __global RayObject *objects, __globa
     }
   }
 
-  pixels[tid].r = min(colour.x, 1.0);
-  pixels[tid].g = min(colour.y, 1.0);
-  pixels[tid].b = min(colour.z, 1.0);
+  pixels[tid].r = min(colour.x, 1.0f);
+  pixels[tid].g = min(colour.y, 1.0f);
+  pixels[tid].b = min(colour.z, 1.0f);
 }

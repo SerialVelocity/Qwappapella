@@ -60,7 +60,7 @@ void rayTracer() {
 
   auto pbuff = CLBuffer(info.context, CL_MEM_WRITE_ONLY | CL_MEM_COPY_HOST_PTR, pixels.length * pixels[0].sizeof, pixels.ptr);
 
-  auto kernel = CLKernel(program, "main");
+  auto kernel = CLKernel(program, "traceRays");
   auto global = NDRange(tracerInfo.width * tracerInfo.height);
 
   kernel.setArgs(pbuff, obuff, tbuff);
