@@ -4,3 +4,5 @@ qwapd
 \#*\#
 *.deps
 *.o
+*.jpg
+*.tga

@@ -3,7 +3,7 @@ CFLAGS=--build-only -version=CL_VERSION_1_1 -L-lOpenCL -Icl4d -d
 RELEASEFLAGS=-release -O -inline
 DEBUGFLAGS=-debug -gc
 
-FILES=main.d Utils.d Euler/*.d
+FILES=main.d Utils.d Euler/*.d RayTracer/*.d RayTracer/*.cl
 
 all: qwap
 
