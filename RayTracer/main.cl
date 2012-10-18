@@ -3,6 +3,7 @@ typedef struct {
   int height;
   float scale;
   int objectCount;
+  int materialCount;
 } TracerInfo;
 
 typedef struct {
@@ -18,8 +19,13 @@ typedef struct {
   ObjectType type;
   float3 centre;
   float radius;
-  bool light;
+  int material;
 } RayObject;
+
+typedef struct {
+  float3 colour;
+  bool light;
+} Material;
 
 bool object_intersect(__global RayObject *object, float3 camerapos, float3 cameradir, float *t) {
   if(object->type == Sphere) {
@@ -58,7 +64,7 @@ float3 object_normal(__global RayObject *object, float3 hit) {
   return (float3)(0.0, 0.0, 0.0);
 }
 
-__kernel void traceRays(__global Colour *pixels, __global RayObject *objects, __global TracerInfo *info) {
+__kernel void traceRays(__global Colour *pixels, __global Material *materials, __global RayObject *objects, __global TracerInfo *info) {
   float3 colour = (float3)(0.0, 0.0, 0.0);
 
   //pixels[0].r = sizeof(RayObject);
@@ -70,7 +76,7 @@ __kernel void traceRays(__global Colour *pixels, __global RayObject *objects, __
 
   //TODO: Take in camera location
 
-  float3 camerapos = (float3)(0.0, 0.0, -5.0);
+  float3 camerapos = (float3)(0.0, 0.0, -10.0);
   float3 screenpos = (float3)(x, y, 0.0);
 
   float3 cameradir = normalize(screenpos - camerapos);
@@ -82,8 +88,9 @@ __kernel void traceRays(__global Colour *pixels, __global RayObject *objects, __
       obj = &objects[i];
 
   if(obj != 0) {
-    if(obj->light) {
-      colour = (float3)(1.0, 1.0, 1.0);
+    __global Material *material = &materials[obj->material];
+    if(material->light) {
+      colour = material->colour;
     } else {
       float3 hit  = camerapos + t * cameradir;
       float3 norm = object_normal(obj, hit);
@@ -93,7 +100,8 @@ __kernel void traceRays(__global Colour *pixels, __global RayObject *objects, __
 	norm *= rsqrt(normdot);
 
 	for(int i = 0; i < info->objectCount; ++i) {
-	  if(!objects[i].light)
+	  __global Material *lightMat = &materials[objects[i].material];
+	  if(!lightMat->light)
 	    continue;
 
 	  float3 dist = objects[i].centre - hit;
@@ -109,7 +117,11 @@ __kernel void traceRays(__global Colour *pixels, __global RayObject *objects, __
 
 	  if(!inShadow) {
 	    float lambert = dot(raydir, norm);
-	    colour += lambert * (float3)(1.0, 1.0, 1.0);
+	    colour += lambert * material->colour * lightMat->colour;
+
+	    float3 blinn = normalize(distnorm + distnorm);
+	    float blinnTerm = max(dot(blinn, norm), 0.0f);
+	    colour += lightMat->colour * pow(blinnTerm, 20) * blinnTerm;
 	  }
 	}
       }
