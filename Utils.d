@@ -32,7 +32,7 @@ auto InitCL() {
   if (info.devices.length < 1)
     throw new CLException(CL_INVALID_DEVICE, "No devices available.");
 
-  debug foreach(i, device; devices)
+  debug foreach(i, device; info.devices)
     writefln("[%s] %s\n\t%s\n\t%s\n\t%s\n\t%s", i == 0 ? "*" : " ", device.name, device.vendor, device.driverVersion, device.clVersion, device.profile, device.extensions);
 
   info.context = CLContext(info.devices);
